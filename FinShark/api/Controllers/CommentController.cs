@@ -10,6 +10,8 @@ namespace api.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
+        #region Initialization
+
         private readonly ICommentRepository _commentRepository;
         private readonly IStockRepository _stockRepository;
 
@@ -19,7 +21,9 @@ namespace api.Controllers
             _stockRepository = stockRepository;
         }
 
+        #endregion
 
+        #region Implementation
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -80,5 +84,7 @@ namespace api.Controllers
 
             return Ok(removedComment.ToCommentDTOFromComment());
         }
+
+        #endregion
     }
 }
