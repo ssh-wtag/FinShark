@@ -1,12 +1,9 @@
 ﻿using api.Data;
 using api.DTOs.Stock;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
-using api.Models;
-using api.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -29,9 +26,12 @@ namespace api.Controllers
         #region Implementation
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] StockQueryObject query)
         {
-            var stocks = await _stockRepository.GetAllAsync();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var stocks = await _stockRepository.GetAllAsync(query);
             var stocksDTO = stocks.Select(s => s.ToStockDTOFromStock());
 
             return Ok(stocksDTO);

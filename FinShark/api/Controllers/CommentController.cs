@@ -1,4 +1,5 @@
 ﻿using api.DTOs.Comment;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Http;
@@ -26,9 +27,12 @@ namespace api.Controllers
         #region Implementation
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] CommentQueryObject query)
         {
-            var comments = await _commentRepository.GetAllAsync();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var comments = await _commentRepository.GetAllAsync(query);
             var commentsDTO = comments.Select(x => x.ToCommentDTOFromComment());
 
             return Ok(commentsDTO);

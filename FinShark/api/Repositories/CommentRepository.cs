@@ -1,5 +1,6 @@
 ﻿using api.Data;
 using api.DTOs.Comment;
+using api.Helpers;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,44 @@ namespace api.Repositories
         }
 
 
-        public async Task<List<Comment>> GetAllAsync()
+        public async Task<List<Comment>> GetAllAsync(CommentQueryObject query)
         {
-            return await _context.Comments.ToListAsync();
+            var comments = _context.Comments.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.Title))
+                comments = comments.Where(s => s.Title.Contains(query.Title));
+
+            if (!string.IsNullOrWhiteSpace(query.Content))
+                comments = comments.Where(s => s.Content.Contains(query.Content));
+
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("Title", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (query.IsDescending)
+                        comments = comments.OrderByDescending(s => s.Title);
+                    else
+                        comments = comments.OrderBy(s => s.Title);
+                }
+                else if (query.SortBy.Equals("Content", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (query.IsDescending)
+                        comments = comments.OrderByDescending(s => s.Content);
+                    else
+                        comments = comments.OrderBy(s => s.Content);
+                }
+                else if (query.SortBy.Equals("Created On", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (query.IsDescending)
+                        comments = comments.OrderByDescending(s => s.CreatedOn);
+                    else
+                        comments = comments.OrderBy(s => s.CreatedOn);
+                }
+            }
+
+            int skipNum = (query.PageNumber - 1) * query.PageSize;
+
+            return await comments.Skip(skipNum).Take(query.PageSize).ToListAsync();
         }
 
 
