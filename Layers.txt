@@ -1,0 +1,19 @@
+Presentation -> API, WinForm
+\/
+Service/Application/Business -> Repository
+\/
+Infrastructure/Data Access
+\/
+Entity/Domain
+
+
+
+PRESENTATION -> API, WinForm, etc.
+
+SERVICE -> Business Logic, Any Logic that Does Not Access the Database
+
+INFRASTRUCTURE -> Context, Database Related All Code
+
+ENTITY -> Domain Logic and Objects
+
+
