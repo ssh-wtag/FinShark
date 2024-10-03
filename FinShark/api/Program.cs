@@ -75,6 +75,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<AppDbContext>();
 
+
+
+///////TO DO -> builder.Services.RegisterAutheticationWithJWT();
 // Things we are gonna use. Like JWT, Cookies and etc.
 builder.Services.AddAuthentication(options =>
 {
