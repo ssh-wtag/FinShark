@@ -1,6 +1,6 @@
-﻿using api.DTOs.Account;
-using api.Interfaces;
-using api.Models;
+﻿using Domain.DTOs.Account;
+using Application.Interfaces;
+using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

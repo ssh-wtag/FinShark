@@ -1,10 +1,9 @@
-﻿using api.DTOs.Comment;
+﻿using Domain.DTOs.Comment;
 using api.Extensions;
-using api.Helpers;
-using api.Interfaces;
-using api.Mappers;
-using api.Models;
-using Microsoft.AspNetCore.Http;
+using Domain.Helpers;
+using Application.Mappers;
+using Domain.Models;
+using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

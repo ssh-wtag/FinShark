@@ -1,7 +1,5 @@
-using api.Data;
-using api.Interfaces;
-using api.Models;
-using api.Repositories;
+using Domain.Repositories;
+using Domain.Models;
 using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Application.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,8 +1,7 @@
-﻿using api.Data;
-using api.DTOs.Stock;
-using api.Helpers;
-using api.Interfaces;
-using api.Mappers;
+﻿using Domain.DTOs.Stock;
+using Domain.Helpers;
+using Domain.Repositories;
+using Application.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
