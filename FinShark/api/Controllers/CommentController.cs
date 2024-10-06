@@ -1,8 +1,11 @@
 ﻿using api.DTOs.Comment;
+using api.Extensions;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
+using api.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -15,11 +18,13 @@ namespace api.Controllers
 
         private readonly ICommentRepository _commentRepository;
         private readonly IStockRepository _stockRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository)
+        public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository, UserManager<AppUser> userManager)
         {
             _commentRepository = commentRepository;
             _stockRepository = stockRepository;
+            _userManager = userManager;
         }
 
         #endregion
@@ -39,6 +44,7 @@ namespace api.Controllers
         }
 
 
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
@@ -51,6 +57,7 @@ namespace api.Controllers
         }
 
 
+
         [HttpPost("{stockId:int}")]
         public async Task<IActionResult> Create([FromRoute] int stockId, [FromBody] CreateCommentRequestDTO commentRequestDTO)
         {
@@ -60,12 +67,17 @@ namespace api.Controllers
             if (!await _stockRepository.StockExists(stockId))
                 return BadRequest("Stock Does Not Exist.");
 
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+
             var comment = commentRequestDTO.ToCommentFromCreateCommentRequestDTO(stockId);
+            comment.AppUserId = appUser.Id; 
 
             await _commentRepository.CreateAsync(comment);
 
             return CreatedAtAction(nameof(GetById), new { id = comment.Id}, comment.ToCommentDTOFromComment());
         }
+
 
 
         [HttpPut("{commentId:int}")]
@@ -81,6 +93,7 @@ namespace api.Controllers
 
             return Ok(comment.ToCommentDTOFromComment());
         }
+
 
 
         [HttpDelete]

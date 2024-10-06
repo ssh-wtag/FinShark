@@ -27,14 +27,13 @@ namespace api.Controllers
         #region Implementation
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] StockQueryObject query)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var stocks = await _stockRepository.GetAllAsync(query);
-            var stocksDTO = stocks.Select(s => s.ToStockDTOFromStock());
+            var stocksDTO = stocks.Select(s => s.ToStockDTOFromStock()).ToList();
 
             return Ok(stocksDTO);
         }
@@ -55,6 +54,7 @@ namespace api.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateStockRequestDTO createDTO)
         {
             if(!ModelState.IsValid)
