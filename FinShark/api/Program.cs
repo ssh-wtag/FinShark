@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Application.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,45 +67,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 // Adding Identity to the WebAPI
-builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequiredLength = 8;
-    options.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddCustomIdentity();
 
 
 
 ///////TO DO -> builder.Services.RegisterAutheticationWithJWT();
 // Things we are gonna use. Like JWT, Cookies and etc.
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer( options =>
-{
-    string? signingKey = builder.Configuration["JWT:SigningKey"];
-
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey
-            (
-                System.Text.Encoding.UTF8.GetBytes(signingKey)
-            )
-    };
-});
+builder.Services.AddCustomJwtAuthentication(builder.Configuration);
 
 
 
