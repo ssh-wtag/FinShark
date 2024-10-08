@@ -73,7 +73,7 @@ builder.Services.AddCustomIdentity();
 
 ///////TO DO -> builder.Services.RegisterAutheticationWithJWT();
 // Things we are gonna use. Like JWT, Cookies and etc.
-builder.Services.AddCustomJwtAuthentication(builder.Configuration);
+builder.Services.RegisterAutheticationWithJWT(builder.Configuration);
 
 
 

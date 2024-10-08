@@ -27,7 +27,7 @@ namespace Application.Extensions
             return services;
         }
 
-        public static IServiceCollection AddCustomJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection RegisterAutheticationWithJWT(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
             {
