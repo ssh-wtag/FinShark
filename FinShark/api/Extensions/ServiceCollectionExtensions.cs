@@ -2,12 +2,11 @@
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
-namespace Application.Extensions
+namespace api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -26,6 +25,8 @@ namespace Application.Extensions
 
             return services;
         }
+
+
 
         public static IServiceCollection RegisterAutheticationWithJWT(this IServiceCollection services, IConfiguration configuration)
         {
@@ -51,6 +52,45 @@ namespace Application.Extensions
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey))
                 };
+            });
+
+            return services;
+        }
+
+
+
+        public static IServiceCollection CustomAddSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen();
+
+            services.AddSwaggerGen(option =>
+            {
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             });
 
             return services;
