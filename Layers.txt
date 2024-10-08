@@ -1,10 +1,10 @@
 Presentation -> API, WinForm
 \/
-Service/Application/Business -> Repository
+Service/Application/Business -> Data Transfer
 \/
-Infrastructure/Data Access
+Infrastructure/Data Access -> Repository
 \/
-Entity/Domain
+Entity/Domain -> Domain Logic
 
 
 
