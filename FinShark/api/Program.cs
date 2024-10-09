@@ -6,19 +6,24 @@ using Application.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using api.Extensions;
+using api.Middlewares;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
-builder.Services.AddControllers(); // Written to Enable Usage of Controllers
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.CustomAddSwagger();
-
-
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddLogging();
+builder.Services.CustomAddSwagger();
+
+
+// Using a Custom Middleware Type 3 (Adding Service Necessary)
+builder.Services.AddTransient<ExceptionHandlingMiddlewareT3>();
 
 
 // Adding DbContext Through Dependency Injection
@@ -32,7 +37,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddCustomIdentity();
 
 
-///////TO DO -> builder.Services.RegisterAutheticationWithJWT();
 // Things we are gonna use. Like JWT, Cookies and etc.
 builder.Services.RegisterAutheticationWithJWT(builder.Configuration);
 
@@ -47,6 +51,7 @@ builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 // Building the Application (Initialization)
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -54,12 +59,39 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
+
 
 // Used for JWT Authentication and Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+// Using a Custom Middleware Type 1
+//app.Use(async (context, next) =>
+//{
+//    try
+//    {
+//        await next(context);
+//    }
+//    catch(Exception ex)
+//    {
+//        Console.WriteLine(ex.Message);
+//        context.Response.StatusCode = 500;
+//    }
+//});
+
+
+// Using a Custom Middleware Type 2
+//app.UseMiddleware<ExceptionHandlingMiddlewareT2>();
+
+
+// Using a Custom Middleware Type 3 (Service Added Above)
+app.UseMiddleware<ExceptionHandlingMiddlewareT3>();
+
+
 app.MapControllers();
+
 
 app.Run();
