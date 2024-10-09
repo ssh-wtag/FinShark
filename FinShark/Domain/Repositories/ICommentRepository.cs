@@ -5,13 +5,13 @@ namespace Domain.Repositories
 {
     public interface ICommentRepository
     {
-        Task<List<Comment>> GetAllAsync(CommentQueryObject query);
+        Task<IQueryable<Comment>> GetAllAsync();
 
         Task<Comment?> GetByIdAsync(int id);
 
         Task<Comment> CreateAsync(Comment comment);
 
-        Task<Comment?> UpdateAsync(int commentID, Comment updatedComment);
+        Task<Comment?> UpdateAsync(Comment comment);
 
         Task<Comment?> DeleteAsync(Comment comment);
     }

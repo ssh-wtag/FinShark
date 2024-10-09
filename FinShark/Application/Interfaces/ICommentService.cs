@@ -1,4 +1,5 @@
-﻿using Domain.Helpers;
+﻿using Domain.DTOs.Comment;
+using Domain.Helpers;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Application.Interfaces
 
         Task<Comment?> GetByIdAsync(int id);
 
-        Task<Comment> CreateAsync(Comment comment);
+        Task<Comment> CreateAsync(string appUserId, int stockId, CreateCommentRequestDTO commentRequestDTO);
 
         Task<Comment?> UpdateAsync(int commentID, Comment updatedComment);
 

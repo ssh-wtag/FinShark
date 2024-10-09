@@ -16,54 +16,16 @@ namespace Infrastructure.Repositories
         }
 
 
-
-        public async Task<List<Comment>> GetAllAsync(CommentQueryObject query)
+        public async Task<IQueryable<Comment>> GetAllAsync()
         {
-            var comments = _context.Comments.Include(s => s.AppUser).AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(query.Title))
-                comments = comments.Where(s => s.Title.Contains(query.Title));
-
-            if (!string.IsNullOrWhiteSpace(query.Content))
-                comments = comments.Where(s => s.Content.Contains(query.Content));
-
-            if (!string.IsNullOrWhiteSpace(query.SortBy))
-            {
-                if (query.SortBy.Equals("Title", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (query.IsDescending)
-                        comments = comments.OrderByDescending(s => s.Title);
-                    else
-                        comments = comments.OrderBy(s => s.Title);
-                }
-                else if (query.SortBy.Equals("Content", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (query.IsDescending)
-                        comments = comments.OrderByDescending(s => s.Content);
-                    else
-                        comments = comments.OrderBy(s => s.Content);
-                }
-                else if (query.SortBy.Equals("Created On", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (query.IsDescending)
-                        comments = comments.OrderByDescending(s => s.CreatedOn);
-                    else
-                        comments = comments.OrderBy(s => s.CreatedOn);
-                }
-            }
-
-            int skipNum = (query.PageNumber - 1) * query.PageSize;
-
-            return await comments.Skip(skipNum).Take(query.PageSize).ToListAsync();
+            return _context.Comments.Include(s => s.AppUser).AsQueryable();
         }
-
 
 
         public async Task<Comment?> GetByIdAsync(int id)
         {
             return await _context.Comments.Include(s => s.AppUser).FirstOrDefaultAsync(s => s.Id == id);
         }
-
 
 
         public async Task<Comment> CreateAsync(Comment comment)
@@ -75,22 +37,11 @@ namespace Infrastructure.Repositories
         }
 
 
-
-        public async Task<Comment?> UpdateAsync(int commentId, Comment updatedComment)
+        public async Task<Comment?> UpdateAsync(Comment comment)
         {
-            var existingComment = await _context.Comments.FindAsync(commentId);
-
-            if (existingComment == null)
-                return null;
-
-            existingComment.Title = updatedComment.Title;
-            existingComment.Content = updatedComment.Content;
-
             await _context.SaveChangesAsync();
-
-            return existingComment;
+            return comment;
         }
-
 
 
         public async Task<Comment?> DeleteAsync(Comment comment)

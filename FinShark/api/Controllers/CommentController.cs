@@ -6,6 +6,8 @@ using Domain.Models;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -15,14 +17,14 @@ namespace api.Controllers
     {
         #region Initialization
 
-        private readonly ICommentRepository _commentRepository;
-        private readonly IStockRepository _stockRepository;
+        private readonly ICommentService _commentService;
+        private readonly IStockService _stockService;
         private readonly UserManager<AppUser> _userManager;
 
-        public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository, UserManager<AppUser> userManager)
+        public CommentController(ICommentService commentService, IStockService stockService, UserManager<AppUser> userManager)
         {
-            _commentRepository = commentRepository;
-            _stockRepository = stockRepository;
+            _commentService = commentService;
+            _stockService = stockService;
             _userManager = userManager;
         }
 
@@ -36,7 +38,7 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var comments = await _commentRepository.GetAllAsync(query);
+            var comments = await _commentService.GetAllAsync(query);
             var commentsDTO = comments.Select(x => x.ToCommentDTOFromComment());
 
             return Ok(commentsDTO);
@@ -47,7 +49,7 @@ namespace api.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var comment = await _commentRepository.GetByIdAsync(id);
+            var comment = await _commentService.GetByIdAsync(id);
 
             if (comment == null)
                 return NotFound();
@@ -58,21 +60,19 @@ namespace api.Controllers
 
 
         [HttpPost("{stockId:int}")]
+        [Authorize]
         public async Task<IActionResult> Create([FromRoute] int stockId, [FromBody] CreateCommentRequestDTO commentRequestDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await _stockRepository.StockExistsAsync(stockId))
+            if (!await _stockService.StockExistsAsync(stockId))
                 return BadRequest("Stock Does Not Exist.");
 
             var username = User.GetUserName();
             var appUser = await _userManager.FindByNameAsync(username);
 
-            var comment = commentRequestDTO.ToCommentFromCreateCommentRequestDTO(stockId);
-            comment.AppUserId = appUser.Id; 
-
-            await _commentRepository.CreateAsync(comment);
+            var comment = await _commentService.CreateAsync(appUser.Id, stockId, commentRequestDTO);
 
             return CreatedAtAction(nameof(GetById), new { id = comment.Id}, comment.ToCommentDTOFromComment());
         }
@@ -85,7 +85,7 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var comment = await _commentRepository.UpdateAsync(commentId, updatedCommentDTO.ToCommentFromUpdateRequestDTO());
+            var comment = await _commentService.UpdateAsync(commentId, updatedCommentDTO.ToCommentFromUpdateRequestDTO());
 
             if(comment == null)
                 return NotFound("Comment Not Found.");
@@ -99,7 +99,7 @@ namespace api.Controllers
         [Route("{commentId:int}")]
         public async Task<IActionResult> Delete([FromRoute] int commentId)
         {
-            var removedComment = await _commentRepository.DeleteAsync(commentId);
+            var removedComment = await _commentService.DeleteAsync(commentId);
 
             if (removedComment == null)
                 return NotFound("This Comment Does Not Exist.");
