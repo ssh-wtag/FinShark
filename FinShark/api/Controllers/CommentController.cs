@@ -63,7 +63,7 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!await _stockRepository.StockExists(stockId))
+            if (!await _stockRepository.StockExistsAsync(stockId))
                 return BadRequest("Stock Does Not Exist.");
 
             var username = User.GetUserName();

@@ -7,6 +7,7 @@ using Infrastructure.Data;
 using Infrastructure.Repositories;
 using api.Extensions;
 using api.Middlewares;
+using Application.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,8 +45,9 @@ builder.Services.RegisterAutheticationWithJWT(builder.Configuration);
 // Dependency Injection of Our Services
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IStockService, StockService>();
 
 
 // Building the Application (Initialization)

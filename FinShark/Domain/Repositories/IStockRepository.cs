@@ -6,7 +6,7 @@ namespace Domain.Repositories
 {
     public interface IStockRepository
     {
-        Task<List<Stock>> GetAllAsync(StockQueryObject query);
+        Task<IQueryable<Stock>> GetAllAsync();
 
         Task<Stock?> GetByIdAsync(int id);
 
@@ -14,10 +14,10 @@ namespace Domain.Repositories
 
         Task<Stock> CreateAsync(Stock newStock);
 
-        Task<Stock?> UpdateAsync(int id, UpdateStockRequestDTO updateStockRequestDTO);
+        Task<Stock?> UpdateAsync(Stock stock);
 
-        Task<Stock?> DeleteAsync(int id);
+        Task<Stock?> DeleteAsync(Stock stock);
 
-        Task<bool> StockExists(int id);
+        Task<bool> StockExistsAsync(int id);
     }
 }

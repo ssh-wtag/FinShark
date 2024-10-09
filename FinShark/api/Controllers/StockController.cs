@@ -4,6 +4,7 @@ using Domain.Repositories;
 using Application.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Application.Interfaces;
 
 namespace api.Controllers
 {
@@ -14,11 +15,11 @@ namespace api.Controllers
     {
         #region Initialization
 
-        private readonly IStockRepository _stockRepository;
+        private readonly IStockService _stockService;
 
-        public StockController(IStockRepository stockRepository)
+        public StockController(IStockService stockService)
         {
-            _stockRepository = stockRepository;
+            _stockService = stockService;
         }
 
         #endregion
@@ -31,7 +32,7 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var stocks = await _stockRepository.GetAllAsync(query);
+            var stocks = await _stockService.GetAllAsync(query);
             var stocksDTO = stocks.Select(s => s.ToStockDTOFromStock()).ToList();
 
             return Ok(stocksDTO);
@@ -42,7 +43,7 @@ namespace api.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var stock = await _stockRepository.GetByIdAsync(id);
+            var stock = await _stockService.GetByIdAsync(id);
 
             if(stock == null)
                 return NotFound();
@@ -53,15 +54,12 @@ namespace api.Controllers
 
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateStockRequestDTO createDTO)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var newStock = createDTO.ToStockFromCreateStockRequestDTO();
-
-            await _stockRepository.CreateAsync(newStock);
+            var newStock = await _stockService.CreateAsync(createDTO);
 
             return CreatedAtAction(nameof(GetById), new { id = newStock.Id}, newStock.ToStockDTOFromStock() );
         }
@@ -75,7 +73,7 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var updatedStock = await _stockRepository.UpdateAsync(id, updateDTO);
+            var updatedStock = await _stockService.UpdateAsync(id, updateDTO);
 
             if(updatedStock == null)
                 return NotFound();
@@ -88,7 +86,7 @@ namespace api.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var deletedStock = await _stockRepository.DeleteAsync(id);
+            var deletedStock = await _stockService.DeleteAsync(id);
 
             if (deletedStock == null)
                 return NotFound();

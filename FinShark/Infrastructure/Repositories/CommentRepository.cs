@@ -93,17 +93,12 @@ namespace Infrastructure.Repositories
 
 
 
-        public async Task<Comment?> DeleteAsync(int commentId)
+        public async Task<Comment?> DeleteAsync(Comment comment)
         {
-            var existingComment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
-
-            if (existingComment == null)
-                return null;
-
-            _context.Comments.Remove(existingComment);
+            _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
 
-            return existingComment;
+            return comment;
         }
     }
 }

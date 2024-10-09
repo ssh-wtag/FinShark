@@ -11,43 +11,16 @@ namespace Infrastructure.Repositories
     {
         private readonly AppDbContext _context;
 
+
         public StockRepository(AppDbContext context)
         {
             _context = context;
         }
 
 
-        public async Task<List<Stock>> GetAllAsync(StockQueryObject query)
+        public async Task<IQueryable<Stock>> GetAllAsync()
         {
-            var stocks = _context.Stocks.Include(s => s.Comments).ThenInclude(s => s.AppUser).AsQueryable();
-
-            if(!string.IsNullOrWhiteSpace(query.Symbol))
-                stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
-
-            if (!string.IsNullOrWhiteSpace(query.CompanyName))
-                stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
-
-            if (!string.IsNullOrWhiteSpace(query.SortBy))
-            {
-                if(query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (query.IsDescending)
-                        stocks = stocks.OrderByDescending(s => s.Symbol);
-                    else
-                        stocks = stocks.OrderBy(s => s.Symbol);
-                }
-                else if(query.SortBy.Equals("Company Name", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (query.IsDescending)
-                        stocks = stocks.OrderByDescending(s => s.CompanyName);
-                    else
-                        stocks = stocks.OrderBy(s => s.CompanyName);
-                }
-            }
-
-            int skipNum = (query.PageNumber - 1) * query.PageSize;
-
-            return await stocks.Skip(skipNum).Take(query.PageSize).ToListAsync();
+            return _context.Stocks.Include(s => s.Comments).ThenInclude(s => s.AppUser);
         }
 
 
@@ -55,6 +28,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.Stocks.Include(s => s.Comments).ThenInclude(s => s.AppUser).FirstOrDefaultAsync(x => x.Id == id);
         }
+
 
         public async Task<Stock?> GetBySymbolAsync(string symbol)
         {
@@ -70,40 +44,23 @@ namespace Infrastructure.Repositories
         }
 
 
-        public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDTO updateStockRequestDTO)
+        public async Task<Stock?> UpdateAsync(Stock stock)
         {
-            var oldStock = await _context.Stocks.FindAsync(id);
-
-            if (oldStock == null)
-                return null;
-
-            oldStock.Symbol = updateStockRequestDTO.Symbol;
-            oldStock.CompanyName = updateStockRequestDTO.CompanyName;
-            oldStock.Purchase = updateStockRequestDTO.Purchase;
-            oldStock.LastDiv = updateStockRequestDTO.LastDiv;
-            oldStock.Industry = updateStockRequestDTO.Industry;
-            oldStock.MarketCap = updateStockRequestDTO.MarketCap;
-
             await _context.SaveChangesAsync();
-            return oldStock;
+            return stock;
         }
 
 
-        public async Task<Stock?> DeleteAsync(int id)
+        public async Task<Stock?> DeleteAsync(Stock stock)
         {
-            var existingStock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (existingStock == null)
-                return null;
-
-            _context.Stocks.Remove(existingStock);
+            _context.Stocks.Remove(stock);
             await _context.SaveChangesAsync();
 
-            return existingStock;
+            return stock;
         }
 
 
-        public async Task<bool> StockExists(int id)
+        public async Task<bool> StockExistsAsync(int id)
         {
             return await _context.Stocks.AnyAsync(x => x.Id == id);
         }

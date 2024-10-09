@@ -1,9 +1,14 @@
 ﻿using Domain.Helpers;
 using Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Domain.Repositories
+namespace Application.Interfaces
 {
-    public interface ICommentRepository
+    public interface ICommentService
     {
         Task<List<Comment>> GetAllAsync(CommentQueryObject query);
 
@@ -13,6 +18,6 @@ namespace Domain.Repositories
 
         Task<Comment?> UpdateAsync(int commentID, Comment updatedComment);
 
-        Task<Comment?> DeleteAsync(Comment comment);
+        Task<Comment?> DeleteAsync(int commentId);
     }
 }
