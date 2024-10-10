@@ -11,11 +11,11 @@ namespace Infrastructure.Repositories
     {
         private readonly AppDbContext _context;
 
-
         public StockRepository(AppDbContext context)
         {
             _context = context;
         }
+
 
 
         public async Task<IQueryable<Stock>> GetAllAsync()
@@ -24,16 +24,19 @@ namespace Infrastructure.Repositories
         }
 
 
+
         public async Task<Stock?> GetByIdAsync(int id)
         {
             return await _context.Stocks.Include(s => s.Comments).ThenInclude(s => s.AppUser).FirstOrDefaultAsync(x => x.Id == id);
         }
 
 
+
         public async Task<Stock?> GetBySymbolAsync(string symbol)
         {
             return await _context.Stocks.FirstOrDefaultAsync(x => x.Symbol == symbol);
         }
+
 
 
         public async Task<Stock> CreateAsync(Stock newStock)
@@ -44,11 +47,13 @@ namespace Infrastructure.Repositories
         }
 
 
+
         public async Task<Stock?> UpdateAsync(Stock stock)
         {
             await _context.SaveChangesAsync();
             return stock;
         }
+
 
 
         public async Task<Stock?> DeleteAsync(Stock stock)
@@ -58,6 +63,7 @@ namespace Infrastructure.Repositories
 
             return stock;
         }
+
 
 
         public async Task<bool> StockExistsAsync(int id)

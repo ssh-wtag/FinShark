@@ -6,7 +6,6 @@ namespace Domain.Repositories
     {
         Task<List<Stock>> GetUserPortfolio(AppUser user);
         Task<Portfolio> CreatePortfolio(Portfolio portfolio);
-
-        Task<Portfolio> DeletePortfolio(AppUser appUser, String symbol);
+        Task<Portfolio> DeletePortfolio(AppUser appUser, Stock stock);
     }
 }

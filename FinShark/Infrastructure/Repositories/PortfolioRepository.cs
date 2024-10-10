@@ -14,6 +14,8 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
+
+
         public async Task<List<Stock>> GetUserPortfolio(AppUser user)
         {
             return await _context.Portfolios
@@ -30,19 +32,21 @@ namespace Infrastructure.Repositories
                 }).ToListAsync();
         }
 
+
+
         public async Task<Portfolio> CreatePortfolio(Portfolio portfolio)
         {
             await _context.Portfolios.AddAsync(portfolio);
             await _context.SaveChangesAsync();
+
             return portfolio;
         }
 
-        public async Task<Portfolio> DeletePortfolio(AppUser appUser, String symbol)
-        {
-            var portfolioModel = await _context.Portfolios.FirstOrDefaultAsync(x => x.AppUserId == appUser.Id && x.Stock.Symbol.ToLower() == symbol.ToLower());
 
-            if (portfolioModel == null)
-                return null;
+
+        public async Task<Portfolio> DeletePortfolio(AppUser appUser, Stock stock)
+        {
+            var portfolioModel = await _context.Portfolios.FirstOrDefaultAsync(x => x.AppUserId == appUser.Id && x.Stock.Symbol == stock.Symbol);
 
             _context.Portfolios.Remove(portfolioModel);
             await _context.SaveChangesAsync();

@@ -49,6 +49,7 @@ builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 
 
 // Building the Application (Initialization)
