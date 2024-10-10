@@ -13,11 +13,13 @@ namespace Domain.Models
 
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
+
         //One-to-One
         public int? StockId { get; set; }
 
         //This is the navigation property, it'll let us dot into it later.
         public Stock? Stock { get; set; }
+
 
         //One-to-One
         public string AppUserId { get; set; }

@@ -19,6 +19,7 @@ namespace Application.Mappers
         }
 
 
+
         public static Comment ToCommentFromCreateCommentRequestDTO(this CreateCommentRequestDTO createCommentRequest, int stockId)
         {
             return new Comment
@@ -28,6 +29,7 @@ namespace Application.Mappers
                 StockId = stockId
             };
         }
+
 
 
         public static Comment ToCommentFromUpdateRequestDTO(this UpdateCommentRequestDTO updateCommentRequestDTO)

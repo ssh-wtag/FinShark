@@ -9,7 +9,6 @@ namespace Domain.DTOs.Comment
         [MaxLength(200, ErrorMessage = "Title Cannot Be Over 200 Characters")]
         public string Title { get; set; } = string.Empty;
 
-
         [Required]
         [MinLength(1, ErrorMessage = "Content Cannot Be Empty")]
         [MaxLength(400, ErrorMessage = "Content Cannot Be Over 400 Characters")]

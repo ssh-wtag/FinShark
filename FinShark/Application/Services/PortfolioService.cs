@@ -1,17 +1,13 @@
 ﻿using Application.Interfaces;
 using Domain.Models;
 using Domain.Repositories;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class PortfolioService : IPortfolioService
     {
+        #region Initialization
+
         private readonly IPortfolioRepository _portfolioRepository;
 
         public PortfolioService(IPortfolioRepository portfolioRepository)
@@ -19,7 +15,11 @@ namespace Application.Services
             _portfolioRepository = portfolioRepository;
         }
 
+        #endregion
 
+
+
+        #region Implementation
 
         public async Task<List<Stock>> GetUserPortfolio(AppUser user)
         {
@@ -59,5 +59,7 @@ namespace Application.Services
 
             return false;
         }
+
+        #endregion
     }
 }

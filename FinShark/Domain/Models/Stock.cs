@@ -21,8 +21,10 @@ namespace Domain.Models
 
         public long MarketCap { get; set; }
 
+
         //One-to-Many
         public List<Comment> Comments { get; set; } = new List<Comment>();
+
 
         //Many-to-Many
         public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();

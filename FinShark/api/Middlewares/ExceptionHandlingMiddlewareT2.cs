@@ -5,9 +5,10 @@ namespace api.Middlewares
 {
     public class ExceptionHandlingMiddlewareT2
     {
+        #region Initialization
+
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
-
 
         public ExceptionHandlingMiddlewareT2(RequestDelegate next, ILogger<ExceptionHandlingMiddlewareT2> logger)
         {
@@ -15,6 +16,11 @@ namespace api.Middlewares
             _logger = logger;
         }
 
+        #endregion
+
+
+
+        #region Implementation
 
         public async Task InvokeAsync(HttpContext context)
         {
@@ -29,6 +35,7 @@ namespace api.Middlewares
 
             return;
         }
+
 
 
         private Task HandleException(HttpContext context, Exception ex)
@@ -48,5 +55,7 @@ namespace api.Middlewares
 
             return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }
+
+        #endregion
     }
 }

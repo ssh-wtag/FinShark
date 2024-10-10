@@ -9,7 +9,6 @@ namespace Infrastructure.Data
     {
         public AppDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
-            
         }
 
         public DbSet<Stock> Stocks { get; set; }
@@ -17,6 +16,8 @@ namespace Infrastructure.Data
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<Portfolio> Portfolios { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -55,7 +56,5 @@ namespace Infrastructure.Data
             // Adding these Roles to the Database
             builder.Entity<IdentityRole>().HasData(roles);
         }
-
-
     }
 }

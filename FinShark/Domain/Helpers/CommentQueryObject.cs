@@ -11,11 +11,15 @@ namespace Domain.Helpers
         public string? Content { get; set; } = null;
 
 
+        // For Sorting
         public string? SortBy { get; set; } = null;
+
         public bool IsDescending { get; set; } = false;
 
 
+        // For Pagination
         public int PageNumber { get; set; } = 1;
+
         public int PageSize { get; set; } = 20;
     }
 }

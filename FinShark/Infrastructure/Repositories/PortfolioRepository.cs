@@ -7,6 +7,8 @@ namespace Infrastructure.Repositories
 {
     public class PortfolioRepository : IPortfolioRepository
     {
+        #region Initialization
+
         private readonly AppDbContext _context;
 
         public PortfolioRepository(AppDbContext context)
@@ -14,7 +16,11 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
+        #endregion
 
+
+
+        #region Implementation
 
         public async Task<List<Stock>> GetUserPortfolio(AppUser user)
         {
@@ -52,5 +58,7 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return portfolioModel;
         }
+
+        #endregion
     }
 }

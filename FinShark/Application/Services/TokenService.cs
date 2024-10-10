@@ -10,6 +10,8 @@ namespace api.Services
 {
     public class TokenService : ITokenService
     {
+        #region Initialization
+
         private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
 
@@ -20,7 +22,11 @@ namespace api.Services
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
         }
 
+        #endregion
 
+
+
+        #region Implementation
 
         public string CreateToken(AppUser appUser)
         {
@@ -55,5 +61,7 @@ namespace api.Services
             // Send it as a String
             return tokenHandler.WriteToken(token);
         }
+
+        #endregion
     }
 }

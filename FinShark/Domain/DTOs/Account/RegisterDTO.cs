@@ -20,8 +20,6 @@ namespace Domain.DTOs.Account
         [CustomPassword(ErrorMessage = "Password Must Be Complex.")]
         public string? Password { get; set; }
 
-
-
         //[Required(ErrorMessage = "Passwords Need to Be Confirmed Before SubMission.")]
         //[Compare("Password", ErrorMessage = "Passwords Do Not Match.")]
         [CustomConfirmPassword("Password")]

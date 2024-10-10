@@ -5,25 +5,25 @@ using Domain.Helpers;
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class StockService : IStockService
     {
-        private readonly IStockRepository _stockRepository;
+        #region Initialization
 
+        private readonly IStockRepository _stockRepository;
 
         public StockService(IStockRepository stockRepository)
         {
             _stockRepository = stockRepository;
         }
 
+        #endregion
+
+
+
+        #region Implementation
 
         public async Task<List<Stock>> GetAllAsync(StockQueryObject query)
         {
@@ -59,10 +59,12 @@ namespace Application.Services
         }
 
 
+
         public async Task<Stock?> GetByIdAsync(int id)
         {
             return await _stockRepository.GetByIdAsync(id);
         }
+
 
 
         public async Task<Stock?> GetBySymbolAsync(string symbol)
@@ -71,12 +73,14 @@ namespace Application.Services
         }
 
 
+
         public async Task<Stock> CreateAsync(CreateStockRequestDTO createDTO)
         {
             var newStock = createDTO.ToStockFromCreateStockRequestDTO();
 
             return await _stockRepository.CreateAsync(newStock);
         }
+
 
 
         public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDTO updateStockRequestDTO)
@@ -97,6 +101,7 @@ namespace Application.Services
         }
 
 
+
         public async Task<Stock?> DeleteAsync(int id)
         {
             Stock? existingStock = await _stockRepository.GetByIdAsync(id);
@@ -108,9 +113,12 @@ namespace Application.Services
         }
 
         
+
         public async Task<bool> StockExistsAsync(int id)
         {
             return await _stockRepository.StockExistsAsync(id);
         }
+
+        #endregion
     }
 }

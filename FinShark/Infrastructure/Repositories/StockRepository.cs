@@ -9,6 +9,8 @@ namespace Infrastructure.Repositories
 {
     public class StockRepository : IStockRepository
     {
+        #region Initialization
+
         private readonly AppDbContext _context;
 
         public StockRepository(AppDbContext context)
@@ -16,7 +18,11 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
+        #endregion
 
+
+
+        #region Implementation
 
         public async Task<IQueryable<Stock>> GetAllAsync()
         {
@@ -70,5 +76,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.Stocks.AnyAsync(x => x.Id == id);
         }
+
+        #endregion
     }
 }

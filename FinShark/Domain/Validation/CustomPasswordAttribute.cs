@@ -9,7 +9,7 @@ namespace Domain.Validation
 {
     public class CustomPasswordAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(Object? value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(Object? value, ValidationContext validationContext)
         {
             if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
             {

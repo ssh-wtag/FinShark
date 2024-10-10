@@ -1,8 +1,6 @@
 ﻿using Domain.DTOs.Stock;
 using Domain.Helpers;
-using Domain.Repositories;
 using Application.Mappers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 
@@ -23,6 +21,8 @@ namespace api.Controllers
         }
 
         #endregion
+
+
 
         #region Implementation
 

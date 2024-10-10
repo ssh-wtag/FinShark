@@ -9,6 +9,8 @@ namespace Domain.Validation
 {
     public class CustomConfirmPasswordAttribute : ValidationAttribute
     {
+        #region Initialization
+
         private readonly string _passwordPropertyName;
 
         public CustomConfirmPasswordAttribute(string passwordPropertyName)
@@ -16,6 +18,11 @@ namespace Domain.Validation
             _passwordPropertyName = passwordPropertyName;
         }
 
+        #endregion
+
+
+
+        #region Implementation
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
@@ -33,5 +40,7 @@ namespace Domain.Validation
 
             return ValidationResult.Success;
         }
+
+        #endregion
     }
 }

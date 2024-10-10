@@ -1,8 +1,6 @@
 ﻿using api.Extensions;
-using Domain.Repositories;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
@@ -13,6 +11,8 @@ namespace api.Controllers
     [ApiController]
     public class PortfolioController : ControllerBase
     {
+        #region Initialization
+
         private readonly UserManager<AppUser> _userManager;
 
         private readonly IStockService _stockService;
@@ -26,7 +26,11 @@ namespace api.Controllers
             _portfolioService = portfolioService;
         }
 
+        #endregion
 
+
+
+        #region Implementation
 
         [HttpGet]
         [Authorize]
@@ -86,5 +90,7 @@ namespace api.Controllers
                 return BadRequest("Stock Not In Your Portfolio");
             }
         }
+
+        #endregion
     }
 }

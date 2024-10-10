@@ -5,25 +5,25 @@ using Domain.Helpers;
 using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class CommentService : ICommentService
     {
-        private readonly ICommentRepository _commentRepository;
+        #region Initialization
 
+        private readonly ICommentRepository _commentRepository;
 
         public CommentService(ICommentRepository commentRepository)
         {
             _commentRepository = commentRepository;
         }
 
+        #endregion
+
+
+
+        #region Implementation
 
         public async Task<List<Comment>> GetAllAsync(CommentQueryObject query)
         {
@@ -66,10 +66,12 @@ namespace Application.Services
         }
 
 
+
         public async Task<Comment?> GetByIdAsync(int id)
         {
             return await _commentRepository.GetByIdAsync(id);
         }
+
 
 
         public async Task<Comment> CreateAsync(string appUserId, int stockId, CreateCommentRequestDTO commentRequestDTO)
@@ -79,6 +81,7 @@ namespace Application.Services
 
             return await _commentRepository.CreateAsync(comment);
         }
+
 
 
         public async Task<Comment?> UpdateAsync(int commentID, Comment updatedComment)
@@ -95,6 +98,7 @@ namespace Application.Services
         }
 
 
+
         public async Task<Comment?> DeleteAsync(int commentId)
         {
             var existingComment = await _commentRepository.GetByIdAsync(commentId);
@@ -104,5 +108,7 @@ namespace Application.Services
 
             return await _commentRepository.DeleteAsync(existingComment);
         }
+
+        #endregion
     }
 }

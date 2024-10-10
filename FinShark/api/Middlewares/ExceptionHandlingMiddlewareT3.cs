@@ -6,14 +6,20 @@ namespace api.Middlewares
 {
     public class ExceptionHandlingMiddlewareT3 : IMiddleware
     {
-        private readonly ILogger<ExceptionHandlingMiddlewareT3> _logger;
+        #region Initialization
 
+        private readonly ILogger<ExceptionHandlingMiddlewareT3> _logger;
 
         public ExceptionHandlingMiddlewareT3(ILogger<ExceptionHandlingMiddlewareT3> logger)
         {
             _logger = logger;
         }
 
+        #endregion
+
+
+
+        #region Implementation
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
@@ -40,5 +46,7 @@ namespace api.Middlewares
 
             return;
         }
+
+        #endregion
     }
 }

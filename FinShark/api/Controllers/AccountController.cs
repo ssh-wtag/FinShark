@@ -1,7 +1,6 @@
 ﻿using Domain.DTOs.Account;
 using Application.Interfaces;
 using Domain.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +11,8 @@ namespace api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        #region Initialization
+
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
@@ -23,7 +24,11 @@ namespace api.Controllers
             _signInManager = signInManager;
         }
 
+        #endregion
 
+
+
+        #region Implementation
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
@@ -95,5 +100,7 @@ namespace api.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        #endregion
     }
 }

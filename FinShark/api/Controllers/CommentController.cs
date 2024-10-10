@@ -3,7 +3,6 @@ using api.Extensions;
 using Domain.Helpers;
 using Application.Mappers;
 using Domain.Models;
-using Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
@@ -29,6 +28,8 @@ namespace api.Controllers
         }
 
         #endregion
+
+
 
         #region Implementation
 
@@ -80,15 +81,23 @@ namespace api.Controllers
 
 
         [HttpPut("{commentId:int}")]
+        [Authorize]
         public async Task<IActionResult> Update([FromRoute] int commentId, [FromBody] UpdateCommentRequestDTO updatedCommentDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var comment = await _commentService.UpdateAsync(commentId, updatedCommentDTO.ToCommentFromUpdateRequestDTO());
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var comment = await _commentService.GetByIdAsync(commentId);
 
-            if(comment == null)
+            if (comment == null)
                 return NotFound("Comment Not Found.");
+
+            if (comment.AppUserId != appUser.Id)
+                return BadRequest($"Comment Does Not Belong to {username}");
+
+            comment = await _commentService.UpdateAsync(commentId, updatedCommentDTO.ToCommentFromUpdateRequestDTO());
 
             return Ok(comment.ToCommentDTOFromComment());
         }
@@ -96,15 +105,24 @@ namespace api.Controllers
 
 
         [HttpDelete]
+        [Authorize]
         [Route("{commentId:int}")]
         public async Task<IActionResult> Delete([FromRoute] int commentId)
         {
-            var removedComment = await _commentService.DeleteAsync(commentId);
+            var username = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(username);
+            var comment = await _commentService.GetByIdAsync(commentId);
 
-            if (removedComment == null)
+            if (comment == null)
                 return NotFound("This Comment Does Not Exist.");
 
-            return Ok(removedComment.ToCommentDTOFromComment());
+            if (comment.AppUserId != appUser.Id)
+                return BadRequest($"Comment Does Not Belong to {username}");
+
+            comment = await _commentService.DeleteAsync(commentId);
+
+
+            return Ok(comment.ToCommentDTOFromComment());
         }
 
         #endregion
